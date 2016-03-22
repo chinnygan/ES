@@ -1,0 +1,216 @@
+<!-- https://kangax.github.io/html-minifier/ to minify -->
+<html>
+<head>
+	<title>Main Control Center for testing</title>
+	<link rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css'>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.1/jquery-ui-timepicker-addon.css'>
+</head>
+<body>
+<div>
+	<span>room 1:</span>
+	<button id='1'>loading</button>
+	<span>turn on after</span>
+	<input class='timey' value='0:0:0' id='from1' type='text'>
+	<span>turn off after</span>
+	<input class='timey' value='0:0:0' id='to1' type='text'>
+	<button class='setAlarmOff' id='time1' data-room='1' >loading</button>
+	<button class='setAlarm' id='timeset1' data-room='1' >loading</button>
+</div>
+<div>
+	<span>room 2:</span>
+	<button id='2'>loading</button>
+	<span>turn on after</span>
+	<input class='timey' value='0:0:0' id='from2' type='text'>
+	<span>turn off after</span>
+	<input class='timey' value='0:0:0' id='to2' type='text'>
+	<button class='setAlarmOff' id='time2' data-room='2' >loading</button>
+	<button class='setAlarm' id='timeset2' data-room='2' >loading</button></div>
+<div>
+	<span>room 3:</span>
+	<button id='3'>loading</button>
+	<span>turn on after</span>
+	<input class='timey' value='0:0:0' id='from3' type='text'>
+	<span>turn off after</span>
+	<input class='timey' value='0:0:0' id='to3' type='text'>
+	<button class='setAlarmOff' id='time3' data-room='3' >loading</button>
+	<button class='setAlarm' id='timeset3' data-room='3' >loading</button></div>
+<div>
+	<span>room 4:</span>
+	<button id='4'>loading</button>
+	<span>turn on after</span>
+	<input class='timey' value='0:0:0' id='from4' type='text'>
+	<span>turn off after</span>
+	<input class='timey' value='0:0:0' id='to4' type='text'>
+	<button class='setAlarmOff' id='time4' data-room='4' >loading</button>
+	<button class='setAlarm' id='timeset4' data-room='4' >loading</button>
+</div>
+<div class='time'>current server time is <span id='curr_time'></span></div>
+<div>Refreshing data every 3 seconds</div>
+
+<div>set up server clock</div>
+<input class='timey' value='0:0:0' id='set_clock' type='text'>
+<button id='setClock' data-status='set_clock'>Set Up Clock</button>
+
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+<script src='https://cdn.jsdelivr.net/jquery.ui.timepicker.addon/1.4.5/jquery-ui-timepicker-addon.min.js'></script>
+
+<script>
+
+$(function(){
+
+app = {};
+
+app.timeControl = true;
+app.room = $(this).attr('id');
+app.on_url = 'http://192.168.105.190/room_on.cgi?';
+app.off_url = 'http://192.168.105.190/room_off.cgi?';
+app.set_date_url = 'http://192.168.105.190/setrtc.cgi?';
+app.set_alarm_url = 'http://192.168.105.190/setalarm.cgi?';
+app.set_alarm_off_url = 'http://192.168.105.190/resetalarm.cgi?';
+app.init = 'http://192.168.105.190/get_status.cgi';
+
+app.data = {}
+$('.timey').timepicker({
+	timeFormat: 'H:m:s',
+	stepHour: 1,
+	stepMinute: 1,
+	stepSecond: 1
+});
+
+init();
+
+
+$('button').on('click', function(){
+
+var button = $(this);
+var status = button.data('status');
+var id = $(this).attr('id');
+var data_room = button.data('room');
+
+if(status == 'off'){
+do_request(app.on_url, id );
+button.text('turn OFF').data('status', 'on');
+}
+else if(status == 'on'){
+do_request(app.off_url, id );
+button.text('turn ON').data('status', 'off');
+}
+else if(status == 'blink'){
+do_request(app.on_url, id );
+button.text('turn OFF').data('status', 'on');
+}
+else if(status == 'set_clock'){
+do_request(app.set_date_url, $('#set_clock').val());
+$('#curr_time').text('changed')
+}
+else if(button.hasClass('setAlarm')){
+value = data_room.toString()+','+$('#from'+data_room).val()+','+$('#to'+data_room).val()
+do_request(app.set_alarm_url, value);
+}
+else if(button.hasClass('setAlarmOff')){
+do_request(app.set_alarm_off_url, data_room);
+}
+
+});
+
+function do_request(url,data){
+	
+var request = $.ajax({
+  url: url+data,
+  method: 'GET',
+  dataType: 'text'
+});
+
+
+}
+
+function init(){
+
+var request = $.ajax({
+  url: app.init,
+  method: 'GET',
+  dataType: 'text'
+});
+
+request.done(function( msg ) {
+  console.log(JSON.parse(msg));
+  app.data = JSON.parse(msg);
+
+  setup_html();
+  setTimeout(init, 3000);
+});
+
+}
+
+function setup_html(){
+
+	app.data.rooms.forEach(function(el, index){
+		var curr_button = $('#'+(index+1));
+
+		if(el == 0){
+			curr_button.text('turn ON').data('status','off');
+		} else if(el == 1) {
+			curr_button.text('turn OFF').data('status', 'on');
+		} else if(el == 2) {
+			curr_button.text('HUSH').data('status','blink');
+
+		}
+	})
+
+	app.data.timeControl.forEach(function(el, index){
+		var curr_button = $('#time'+(index+1));
+		var curr_button_set = $('#timeset'+(index+1));
+
+		if(el == 0){
+			curr_button.hide();
+			curr_button_set.text('SET ON/OFF TIMES')
+
+		} else if(el == 1) {
+			curr_button_set.text('SET ON/OFF TIMES')
+			curr_button.text('timeControl turn OFF').show();
+			// curr_button.text('turn OFF').data('status', 'on');
+		}
+	})
+
+	if(app.timeControl){
+
+
+	app.data.zoneOn.forEach(function(time, index){
+
+		var curr_input = $('#from'+(index+1));
+
+		var sec = time % 60
+		var min = Math.floor(time / 60) % 60
+		var hrs = Math.floor(time / 3600)
+
+		var str = hrs.toString()+':'+min.toString()+':'+sec.toString()
+		curr_input.val(str);
+
+	})
+
+	app.data.zoneOff.forEach(function(time, index){
+
+		var curr_input = $('#to'+(index+1));
+
+		var sec = time % 60
+		var min = Math.floor(time / 60) % 60
+		var hrs = Math.floor(time / 3600)
+
+		var str = hrs.toString()+':'+min.toString()+':'+sec.toString()
+		curr_input.val(str);
+
+	})
+	app.timeControl = false;
+	}
+
+
+	$('#curr_time').text(app.data.time);
+
+}
+
+});
+
+</script>
+</body>
+</html>
