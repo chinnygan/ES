@@ -1,3 +1,3 @@
 #!/usr/bin/bash
-alias src="source /group/teaching/espractical/OpenOCD/setup.sh"
-alias flash="/group/teaching/espractical/Part2/Scripts/flash.sh main"
+alias src="source ../Scripts/setup.sh"
+alias flash="../Scripts/flash.sh main"

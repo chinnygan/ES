@@ -7,7 +7,7 @@
 #define BUTTON_TOP_BIT (1 << 0)
 #define BUTTON_BOTTOM_BIT (1 << 26)
 
-extern void BUTTON_init();
-extern bool BUTTON_value(int BUTTON_ID);
+extern void button_init();
+extern int button_value(int BUTTON_ID);
 
 #endif
