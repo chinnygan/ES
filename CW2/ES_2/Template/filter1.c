@@ -18,14 +18,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #include <stdlib.h> // For malloc/free
 #include <string.h> // For memset
 
-float filter1_coefficients[20] =
+float filter1_coefficients[5] =
 {
 // Scaled for floating point
 
-    0.9559025796657589, -1.9118051593315177, 0.9559025796657589, 1.527635591369355, -0.7253280429895612,// b0, b1, b2, a1, a2
-    0.25, -0.5, 0.25, 1.7479956457420662, -0.8993446739158173,// b0, b1, b2, a1, a2
-    0.0625, 0.125, 0.0625, 1.325173051363978, -0.6584500002289182,// b0, b1, b2, a1, a2
-    0.0625, 0.125, 0.0625, 1.3138787406673829, -0.8278481652242764// b0, b1, b2, a1, a2
+    0.08967056010435584, 0, -0.08967056010435584, 0.5310724140100571, -0.8206787908286601// b0, b1, b2, a1, a2
 
 };
 
@@ -70,12 +67,6 @@ void filter1_destroy( filter1Type *pObject )
 
 	filter1_filterBiquad( &executionState );		// Run biquad #0
 	executionState.pInput = executionState.pOutput;         // The remaining biquads will now re-use the same output buffer.
-
-	filter1_filterBiquad( &executionState );		// Run biquad #1
-
-	filter1_filterBiquad( &executionState );		// Run biquad #2
-
-	filter1_filterBiquad( &executionState );		// Run biquad #3
 
 	// At this point, the caller-supplied output buffer will contain the filtered samples and the input buffer will contain the unmodified input samples.
 	return count;		// Return the number of samples processed, the same as the number of input samples

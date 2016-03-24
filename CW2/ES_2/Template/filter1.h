@@ -14,17 +14,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 // A commercial license for MicroModeler DSP can be obtained at http://www.micromodeler.com/launch.jsp
 
 // Begin header file, filter1.h
+// 1500-1750Hz Band Pass First Order
 
 #ifndef FILTER1_H_ // Include guards
 #define FILTER1_H_
 
-static const int filter1_numStages = 4;
-static const int filter1_coefficientLength = 20;
-extern float filter1_coefficients[20];
+static const int filter1_numStages = 1;
+static const int filter1_coefficientLength = 5;
+extern float filter1_coefficients[5];
 
 typedef struct
 {
-	float state[16];
+	float state[4];
 	float output;
 } filter1Type;
 

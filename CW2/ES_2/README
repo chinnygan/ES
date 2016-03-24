@@ -1,0 +1,10 @@
+README
+
+Embeddded Systems Coursework 2
+Scott Postlethwaite & Paulius Gedminas
+
+The code is running through the main file. The additional files required are button.c, uart.c, 
+filter0.c, filter1.c, filter2.c & filter3.c with their corresponding header files. The data is piped
+into main which will choose a filter based on the current selected filter (chosen by push buttons on
+the board) and run the input through this before sending the filtered data back. The current state
+will be shown on the board by a corresponding LED light. 

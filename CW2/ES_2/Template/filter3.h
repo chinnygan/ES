@@ -13,20 +13,22 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 // A commercial license for MicroModeler DSP can be obtained at http://www.micromodeler.com/launch.jsp
 
-// Begin header file, filter1.h
+// Begin header file, filter3.h
 
-#ifndef FILTER1_H_ // Include guards
-#define FILTER1_H_
+// 3000-3750Hz Band Pass single order filter
 
-static const int filter1_numStages = 4;
-static const int filter1_coefficientLength = 20;
-extern float filter1_coefficients[20];
+#ifndef FILTER3_H_ // Include guards
+#define FILTER3_H_
+
+static const int filter3_numStages = 1;
+static const int filter3_coefficientLength = 5;
+extern float filter3_coefficients[5];
 
 typedef struct
 {
-	float state[16];
+	float state[4];
 	float output;
-} filter1Type;
+} filter3Type;
 
 typedef struct
 {
@@ -35,25 +37,25 @@ typedef struct
 	float *pState;
 	float *pCoefficients;
 	short count;
-} filter1_executionState;
+} filter3_executionState;
 
 
-filter1Type *filter1_create( void );
-void filter1_destroy( filter1Type *pObject );
- void filter1_init( filter1Type * pThis );
- void filter1_reset( filter1Type * pThis );
-#define filter1_writeInput( pThis, input )  \
-	filter1_filterBlock( pThis, &input, &pThis->output, 1 );
+filter3Type *filter3_create( void );
+void filter3_destroy( filter3Type *pObject );
+ void filter3_init( filter3Type * pThis );
+ void filter3_reset( filter3Type * pThis );
+#define filter3_writeInput( pThis, input )  \
+	filter3_filterBlock( pThis, &input, &pThis->output, 1 );
 
-#define filter1_readOutput( pThis )  \
+#define filter3_readOutput( pThis )  \
 	pThis->output
 
- int filter1_filterBlock( filter1Type * pThis, float * pInput, float * pOutput, unsigned int count );
-#define filter1_outputToFloat( output )  \
+ int filter3_filterBlock( filter3Type * pThis, float * pInput, float * pOutput, unsigned int count );
+#define filter3_outputToFloat( output )  \
 	(output)
 
-#define filter1_inputFromFloat( input )  \
+#define filter3_inputFromFloat( input )  \
 	(input)
 
- void filter1_filterBiquad( filter1_executionState * pExecState );
-#endif // FILTER1_H_
+ void filter3_filterBiquad( filter3_executionState * pExecState );
+#endif // FILTER3_H_
