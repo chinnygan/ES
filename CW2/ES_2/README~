@@ -11,9 +11,9 @@ will be shown on the board by a corresponding LED light.
 
 There are 4 filters on the board.
 0(BLUE)		:  500-1000Hz Single Order Band Pass
-1(GREEN)	: 1500-1750Hz Single Order Band Pass
-2(YELLOW)	: 2000-2500Hz Single Order Band Pass
-3(RED)		: 3000-3750Hz Single Order Band Pass
+0(GREEN)	: 1500-1750Hz Single Order Band Pass
+0(YELLOW)	: 2000-2500Hz Single Order Band Pass
+0(RED)		: 3000-3750Hz Single Order Band Pass
 
 The main file is compiled by the makefile and flashed to the board (usually due to scripts on ACM0). 
 
