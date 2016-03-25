@@ -84,10 +84,3 @@ void uartPutchar(UART_MemMapPtr uartChannel, char ch) {
 int uartGetcharPresent(UART_MemMapPtr uartChannel) {
     return (UART_S1_REG(uartChannel) & UART_S1_RDRF_MASK) != 0;
 }
-
-
-void uartPuts(UART_MemMapPtr uartChannel, char *p) {
-    while(*p) {
-    	uartPutchar(uartChannel, *p++);
-    }
-}
